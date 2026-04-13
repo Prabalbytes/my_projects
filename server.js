@@ -4,7 +4,6 @@ import dotenv from "dotenv";
 import cors from "cors";
 import nodemailer from "nodemailer";
 import Message from "./models/Message.js";
-
 dotenv.config();
 
 const app = express();
