@@ -3,14 +3,9 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
 import nodemailer from "nodemailer";
-import path from "path";
-import { fileURLToPath } from "url";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-import Message from "./models/Message.js";
+import Message from "./models/message.js";
 dotenv.config();
+
 const app = express();
 
 // Middleware
