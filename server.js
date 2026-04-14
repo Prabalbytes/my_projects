@@ -9,9 +9,8 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-import Message from path.join(__dirname, "models/Message.js");
+import Message from "./models/Message.js";
 dotenv.config();
-
 const app = express();
 
 // Middleware
