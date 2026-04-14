@@ -1,6 +1,7 @@
+
 # Portfolio Backend
 
-REST API for the PrabalBytes portfolio website. Handles contact form submissions, saves messages to MongoDB, and sends email notifications via Gmail.
+REST API for the PrabalBytes portfolio website. Handles contact form submissions, saves messages to MongoDB, and sends email notifications via Resend.
 
 ---
 
@@ -9,7 +10,7 @@ REST API for the PrabalBytes portfolio website. Handles contact form submissions
 - **Runtime** — Node.js
 - **Framework** — Express.js
 - **Database** — MongoDB Atlas (Mongoose)
-- **Email** — Nodemailer (Gmail SMTP)
+- **Email** — Resend API
 - **Hosting** — Render (free tier)
 
 ---
@@ -19,7 +20,7 @@ REST API for the PrabalBytes portfolio website. Handles contact form submissions
 ```
 backend/
 ├── models/
-│   └── Message.js      # MongoDB schema for contact messages
+│   └── message.js      # MongoDB schema for contact messages
 ├── server.js           # Express app, routes, email logic
 ├── .env                # Environment variables (never commit this)
 ├── .gitignore
@@ -46,7 +47,7 @@ Receives form data, saves to MongoDB, and sends emails.
 ```json
 {
   "success": true,
-  "message": "Message sent!"
+  "message": "Message sent successfully"
 }
 ```
 
@@ -66,33 +67,14 @@ Receives form data, saves to MongoDB, and sends emails.
 
 ---
 
-### GET `/messages`
-Returns all submitted contact messages (admin use only).
-
-**Response:**
-```json
-[
-  {
-    "_id": "...",
-    "name": "John Doe",
-    "email": "john@example.com",
-    "message": "Hey Prabal...",
-    "createdAt": "2026-04-10T08:00:00.000Z"
-  }
-]
-```
-
----
-
 ## Environment Variables
 
-Create a `.env` file in the `backend/` folder:
+Create a `.env` file in the root folder:
 
 ```env
 PORT=5000
 MONGO_URI=mongodb+srv://<username>:<password>@cluster0.xxxxx.mongodb.net/portfolio?retryWrites=true&w=majority
-EMAIL_USER=your@gmail.com
-EMAIL_PASS=your_gmail_app_password
+RESEND_API_KEY=re_xxxxxxxxxxxxxxxxxxxx
 MY_EMAIL=your@gmail.com
 ```
 
@@ -100,11 +82,10 @@ MY_EMAIL=your@gmail.com
 |----------|-------------|
 | `PORT` | Port the server runs on |
 | `MONGO_URI` | MongoDB Atlas connection string |
-| `EMAIL_USER` | Gmail address used to send emails |
-| `EMAIL_PASS` | Gmail App Password (not your real password) |
+| `RESEND_API_KEY` | API key from resend.com |
 | `MY_EMAIL` | Your email where you receive notifications |
 
-> **Gmail App Password** — Go to Google Account → Security → 2-Step Verification → App Passwords → generate one for "Mail".
+> **Resend API Key** — Sign up at [resend.com](https://resend.com) → API Keys → Create API Key.
 
 ---
 
@@ -112,17 +93,17 @@ MY_EMAIL=your@gmail.com
 
 ```bash
 # 1. Clone the repo
-git clone https://github.com/yourname/portfolio.git
-cd portfolio/backend
+git clone https://github.com/Prabalbytes/my_projects.git
+cd my_projects
 
 # 2. Install dependencies
 npm install
 
 # 3. Create .env file and fill in your values
-cp .env.example .env
+# (see Environment Variables section above)
 
 # 4. Start the development server
-npm run dev
+node server.js
 ```
 
 Server runs at `http://localhost:5000`
@@ -137,13 +118,14 @@ Server runs at `http://localhost:5000`
 4. Set these in Render dashboard:
 
 ```
-Root Directory:  backend
 Build Command:   npm install
 Start Command:   node server.js
 ```
 
-5. Add all environment variables from `.env` in Render's dashboard
+5. Add all environment variables in Render's Environment tab
 6. Deploy — Render gives you a live URL
+
+> **Note:** Render free tier spins down after inactivity — first request may take 50+ seconds.
 
 ---
 
@@ -158,12 +140,18 @@ Validate fields
       ↓
 Save to MongoDB (Message model)
       ↓
-Promise.all() — sends 2 emails simultaneously:
+Resend API — sends 2 emails:
    ├── Notification email → admin (you)
    └── Thank you email   → client (form submitter)
       ↓
 Return 200 success
 ```
+
+---
+
+## Why Resend instead of Nodemailer?
+
+Render's free tier blocks outgoing SMTP connections on port 465 (Gmail). Resend uses HTTPS instead, which works perfectly on Render's free tier.
 
 ---
 
@@ -180,8 +168,9 @@ node_modules/
 
 ## Frontend
 
-The frontend (React + Vite) is in the `/frontend` folder of the same repo.
-Live at: [prabalbytes.vercel.app](https://prabalbytes.vercel.app)
+The frontend (React + Vite) is in a separate repo.
+- **Live:** [my-projects-frontend-two.vercel.app](https://my-projects-frontend-two.vercel.app)
+- **Repo:** [github.com/Prabalbytes/my_projects_frontend-](https://github.com/Prabalbytes/my_projects_frontend-)
 
 ---
 
@@ -189,5 +178,6 @@ Live at: [prabalbytes.vercel.app](https://prabalbytes.vercel.app)
 
 **Prabal Das**
 - Email: prabaldas421@gmail.com
-- GitHub: [github.com/yourname](https://github.com/yourname)
-- LinkedIn: [linkedin.com/in/yourname](https://linkedin.com/in/yourname)
+- GitHub: [github.com/Prabalbytes](https://github.com/Prabalbytes)
+- LinkedIn: [linkedin.com/in/prabal-das-a89604296](https://www.linkedin.com/in/prabal-das-a89604296/)
+```
